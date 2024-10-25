@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> - Carros</title>
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e0e0e0; /* Cor de fundo mais clara */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #333;
+        }
+
+        /* Cabeçalho */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 1em;
+            background-color: #2C3E50; /* Cor de cabeçalho mais escura */
+            color: white;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin-left: 10px;
+            font-size: 1.5em;
+        }
+
+        .icons .icon {
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            margin-left: 15px;
+        }
+
+        /* Barra Lateral */
+        .sidebar {
+            width: 250px;
+            background: #34495E; /* Cor lateral */
+            color: white;
+            position: fixed;
+            top: 0;
+            left: -250px;
+            height: 100%;
+            transition: 0.3s;
+            padding: 2em 1em;
+            z-index: 1000;
+            box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px 0;
+        }
+
+        .sidebar-toggle,
+        .close-btn {
+            font-size: 30px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: white;
+            padding: 0;
+            margin-bottom: 15px;
+        }
+
+        /* Carrinho */
+        .cart {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            background: #fdfdfd;
+            width: 300px;
+            height: 100%;
+            padding: 20px;
+            box-shadow: -5px 0 5px rgba(0, 0, 0, 0.3);
+            transition: 0.3s;
+            color: #333;
+            z-index: 1000;
+        }
+
+        .cart h2 {
+            margin-bottom: 20px;
+        }
+
+        .cart ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+
+        .cart button {
+            background: #2C3E50; /* Cor dos botões */
+            color: #fff;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        /* Tickets */
+        main {
+            max-width: 1200px;
+            width: 100%;
+            padding: 2em;
+            margin-top: 2em;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .tickets {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .tickets h2 {
+            color: #2C3E50; /* Cor dos títulos */
+            text-align: center;
+            width: 100%;
+            margin-bottom: 1em;
+        }
+
+        .ticket {
+            padding: 1em;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            width: calc(30% - 20px);
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-radius: 10px;
+            transition: transform 0.2s ease;
+        }
+
+        .ticket:hover {
+            transform: scale(1.05);
+        }
+
+        .ticket img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        /* Perfil */
+        #profile-section {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background: #f4f4f4;
+            padding: 20px;
+            box-shadow: -5px 0 5px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            color: #333;
+        }
+
+        #profile-section h2 {
+            margin-bottom: 20px;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .cart, #profile-section {
+                width: 250px;
+            }
+
+            .ticket {
+                width: calc(50% - 20px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .ticket {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barra lateral -->
+    <aside id="sidebar" class="sidebar">
+        <button onclick="toggleSidebar()" class="close-btn">&times;</button>
+        <h2>Categorias</h2>
+        <ul>
+            <li><a href="#carros-sport">Carros Esportivos</a></li>
+            <li><a href="#carros-classicos">Carros Clássicos</a></li>
+            <li><a href="#carros-suv">SUVs</a></li>
+        </ul>
+    </aside>
+
+    <!-- Cabeçalho -->
+    <header>
+        <button onclick="toggleSidebar()" class="sidebar-toggle">&#9776;</button>
+        <h1> Franqueiro Carros</h1>
+        <div class="icons">
+            <img src="https://cdn-icons-png.flaticon.com/512/3106/3106807.png" alt="Perfil" class="icon" onclick="viewProfile()">
+            <img src="https://cdn-icons-png.flaticon.com/512/6713/6713723.png" alt="Carrinho" class="icon" onclick="viewCart()">
+        </div>
+    </header>
+
+    <!-- Conteúdo principal -->
+    <main>
+        <!-- Seção de Carros Esportivos -->
+        <section id="carros-sport" class="tickets">
+            <h2>Carros Esportivos</h2>
+            <div class="ticket">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyRsfxXUIv0-o3rFL-PLf7elmtyXq6xtJYbg&s" alt="Audi R8">
+                <h3>Audi R8</h3>
+                <p>Preço: R$500.000,00</p>
+                <button onclick="addToCart('Audi R8', 500000)">Adicionar ao Carrinho</button>
+            </div>
+            <div class="ticket">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRILF6A13nbpRUjSkELC00pkdhbzCsGaa8jBQ&s" alt="Mercedes AMG GT">
+                <h3>Mercedes AMG GT</h3>
+                <p>Preço: R$900.000,00</p>
+                <button onclick="addToCart('Mercedes AMG GT', 900000)">Adicionar ao Carrinho</button>
+            </div>
+            <div class="ticket">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDbPVPm17qb9bTcEqcX6MB6H4h3iokLhR-Xg&s" alt="Porsche 911 GT3">
+                <h3>Porsche 911 GT3</h3>
+                <p>Preço: R$1.200.000,00</p>
+                <button onclick="addToCart('Porsche 911 GT3', 1200000)">Adicionar ao Carrinho</button>
+            </div>
+        </section>
+
+        <!-- Seção de Carros Clássicos -->
+        <section id="carros-classicos" class="tickets">
+            <h2>Carros Clássicos</h2>
+            <div class="ticket">
+                <img src="https://p.turbosquid.com/ts-thumb/wU/25iVDh/szY1fW7d/f0000/jpg/1551464002/600x600/fit_q87/e77413911658626f66d2f95abb51f3449ae9e2a7/f0000.jpg" alt="Ford Mustang 1965">
+                <h3>Ford Mustang 1965</h3>
+                <p>Preço: R$300.000,00</p>
+                <button onclick="addToCart('Ford Mustang 1965', 300000)">Adicionar ao Carrinho</button>
+            </div>
+            <div class="ticket">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNj0gSE67RmXGwDavXudRYsX3eiejFA0GIoA&s" alt="Chevrolet Corvette 1967">
+                <h3>Chevrolet Corvette 1967</h3>
+                <p>Preço: R$350.000,00</p>
+                <button onclick="addToCart('Chevrolet Corvette 1967', 350000)">Adicionar ao Carrinho</button>
+            </div>
+            <div class="ticket">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSn-goHx5CaCvobtSNn0LieFD9ErC6p-ay4Lg&s" alt="Volkswagen Beetle 1971">
+                <h3>Volkswagen Beetle 1971</h3>
+                <p>Preço: R$100.000,00</p>
+                <button onclick="addToCart('Volkswagen Beetle 1971', 100000)">Adicionar ao Carrinho</button>
+            </div>
+        </section>
+
+        <!-- Seção de SUVs -->
+        <section id="carros-suv" class="tickets">
+            <h2>SUVs</h2>
+            <div class="ticket">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6wuaPGd8zQSpU4rX3eJEt0zC_PSc7egTTMQ&s" alt="Ford Bronco">
+                <h3>Ford Bronco</h3>
+                <p>Preço: R$200.000,00</p>
+                <button onclick="addToCart('Ford Bronco', 200000)">Adicionar ao Carrinho</button>
+            </div>
+            <div class="ticket">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgdFwiJ7KD59cJoaD_iPOJJeR1x9Kp_ux4fw&s" alt="Kia Sportage">
+                <h3>Kia Sportage</h3>
+                <p>Preço: R$150.000,00</p>
+                <button onclick="addToCart('Kia Sportage', 150000)">Adicionar ao Carrinho</button>
+            </div>
+            <div class="ticket">
+                <img src="https://www.jeep.com.br/content/dam/jeep/products/675/aad/1/2025/page/hero.webp" alt="Jeep Compass">
+                <h3>Jeep Compass</h3>
+                <p>Preço: R$170.000,00</p>
+                <button onclick="addToCart('Jeep Compass', 170000)">Adicionar ao Carrinho</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Seção do Carrinho -->
+    <div id="cart" class="cart">
+        <h2>Carrinho</h2>
+        <ul id="cart-items"></ul>
+        <button onclick="checkout()">Finalizar Compra</button>
+    </div>
+
+    <!-- Seção do Perfil -->
+    <div id="profile-section">
+        <h2>Perfil</h2>
+        <p>Nome: <span id="profile-name">Usuário</span></p>
+        <p>Email: <span id="profile-email">usuario@example.com</span></p>
+        <button onclick="closeProfile()">Fechar</button>
+    </div>
+
+    <script>
+        const cart = [];
+        const profile = { name: "Usuário", email: "usuario@example.com" };
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.style.left = sidebar.style.left === '0px' ? '-250px' : '0px';
+        }
+
+        function viewCart() {
+            const cartDiv = document.getElementById('cart');
+            cartDiv.style.right = cartDiv.style.right === '0px' ? '-300px' : '0px';
+            renderCart();
+        }
+
+        function addToCart(item, price) {
+            cart.push({ item, price });
+            renderCart();
+        }
+
+        function renderCart() {
+            const cartItems = document.getElementById('cart-items');
+            cartItems.innerHTML = '';
+            cart.forEach((cartItem, index) => {
+                cartItems.innerHTML += `<li>${cartItem.item} - R$${cartItem.price.toLocaleString('pt-BR')}</li>`;
+            });
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Carrinho vazio!');
+                return;
+            }
+            alert('Compra finalizada com sucesso!');
+            cart.length = 0; // Limpa o carrinho
+            renderCart();
+            viewCart(); // Fecha o carrinho
+        }
+
+        function viewProfile() {
+            document.getElementById('profile-section').style.display = 'block';
+            document.getElementById('profile-name').innerText = profile.name;
+            document.getElementById('profile-email').innerText = profile.email;
+        }
+
+        function closeProfile() {
+            document.getElementById('profile-section').style.display = 'none';
+        }
+    </script>
+
+</body>
+</html>
